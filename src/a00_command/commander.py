@@ -61,7 +61,7 @@ class Commander():
                     print "got a message but it's not json rpc: %s " % rpc
 
                 # when you are done delete the message from firebase
-                # self.fetcher.delete_message(timestamp)
+                self.fetcher.delete_message(timestamp)
 
             messages = self.fetcher.read()
 
