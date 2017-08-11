@@ -42,9 +42,8 @@ class Commander():
             path = messages["path"]
             data = messages["data"]
 
-            print "data; ", data
-
             if data is not None:
+                print  "recieved command: ", data
 
                 for timestamp, rpc in data.iteritems():
 
