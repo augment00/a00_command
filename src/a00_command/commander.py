@@ -10,11 +10,9 @@ class Commander():
                                               custom_token_url,
                                               auth_domain,
                                               db_url)
-
         self.functions = {}
         self.add_function("log", self.log)
         self.logged = []
-
 
 
     def start(self):
@@ -44,24 +42,28 @@ class Commander():
             path = messages["path"]
             data = messages["data"]
 
-            for timestamp, rpc in data.iteritems():
+            print "data; ", data
 
-                method = rpc.get("method")
+            if data is not None:
 
-                if method is not None:
-                    func = self.functions.get(method)
-                    if func is not None:
-                        params = rpc.get("params")
-                        if params is not None:
-                            try:
-                                func(*params)
-                            except Exception as e:
-                                print "Failed to run method: %s Error: %s" % (method, e)
-                else:
-                    print "got a message but it's not json rpc: %s " % rpc
+                for timestamp, rpc in data.iteritems():
 
-                # when you are done delete the message from firebase
-                self.fetcher.delete_message(timestamp)
+                    method = rpc.get("method")
+
+                    if method is not None:
+                        func = self.functions.get(method)
+                        if func is not None:
+                            params = rpc.get("params")
+                            if params is not None:
+                                try:
+                                    func(*params)
+                                except Exception as e:
+                                    print "Failed to run method: %s Error: %s" % (method, e)
+                    else:
+                        print "got a message but it's not json rpc: %s " % rpc
+
+                    # when you are done delete the message from firebase
+                    self.fetcher.delete_message(timestamp)
 
             messages = self.fetcher.read()
 
