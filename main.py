@@ -24,8 +24,8 @@ from a00_command.libs.test_lib import say
 CREDS_PATH = os.environ["CREDENTIALS_PATH"]
 GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
 CUSTOM_TOKEN_URL = os.environ["FIREBASE_CUSTOM_TOKEN_URL"]
-AUTH_DOMAIN = os.environ["FIREBASE_DB_URL"]
-DB_URL = os.environ["GOOGLE_API_KEY"]
+AUTH_DOMAIN = os.environ["FIREBASE_AUTH_DOMAIN"]
+DB_URL = os.environ["FIREBASE_DB_URL"]
 
 
 def main():
