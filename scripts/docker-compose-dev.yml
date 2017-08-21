@@ -1,0 +1,21 @@
+version: '3'
+services:
+  dev_brickd:
+    container_name: dev_brickd
+    privileged: true
+    image: "augment00/augment00-brickd:latest"
+    volumes:
+      - "/etc/opt/augment00:/etc/opt/augment00"
+  dev_command:
+    container_name: dev_command
+    privileged: true
+    links:
+      - dev_brickd:brickd
+    depends_on:
+      - dev_brickd
+    image: "augment00/augment00-command:latest"
+    volumes:
+      - "/etc/opt/augment00:/etc/opt/augment00"
+      - "/opt/augment00/dev/augment00-command:/opt/augment00/dev/augment00-command"
+    env_file: .env
+    command: "python -u /opt/augment00/dev/deskcontrol/controller.py"
