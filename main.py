@@ -51,18 +51,12 @@ def main():
     commander.start()
     time.sleep(2)
 
-    client = Client(SENTRY_URL) if SENTRY_URL is not None else None
+    sentry_client = Client(SENTRY_URL) if SENTRY_URL is not None else None
 
     while True:
         try:
             # ask it to process any waiting messages
-            if client is None:
-                commander.tick()
-            else:
-                try:
-                    commander.tick()
-                except Exception:
-                    client.captureException()
+            commander.tick(sentry_client)
             time.sleep(0.5)
         except KeyboardInterrupt:
             commander.stop()

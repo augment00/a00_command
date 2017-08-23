@@ -32,7 +32,7 @@ class Commander():
         self.functions[name] = func
 
 
-    def tick(self):
+    def tick(self, sentry_client):
 
         messages = self.fetcher.read()
 
@@ -57,7 +57,11 @@ class Commander():
                                 try:
                                     func(*params)
                                 except Exception as e:
-                                    print "Failed to run method: %s Error: %s" % (method, e)
+                                    if sentry_client is None:
+                                        print "Failed to run method: %s Error: %s" % (method, e)
+                                    else:
+                                        print "Failed to run method: %s check sentry for details" % (method)
+                                        sentry_client.captureException()
                     else:
                         print "got a message but it's not json rpc: %s " % rpc
 
