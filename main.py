@@ -4,6 +4,7 @@ import time
 import os
 import sys
 import json
+from raven import Client
 
 try:
     import a00_command
@@ -26,7 +27,7 @@ GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
 CUSTOM_TOKEN_URL = os.environ["FIREBASE_CUSTOM_TOKEN_URL"]
 AUTH_DOMAIN = os.environ["FIREBASE_AUTH_DOMAIN"]
 DB_URL = os.environ["FIREBASE_DB_URL"]
-
+SENTRY_URL = os.environ.get("SENTRY_URL")
 
 def main():
 
@@ -50,10 +51,18 @@ def main():
     commander.start()
     time.sleep(2)
 
+    client = Client(SENTRY_URL) if SENTRY_URL is not None else None
+
     while True:
         try:
             # ask it to process any waiting messages
-            commander.tick()
+            if client is None:
+                commander.tick()
+            else:
+                try:
+                    commander.tick()
+                except Exception:
+                    client.captureException()
             time.sleep(0.5)
         except KeyboardInterrupt:
             commander.stop()

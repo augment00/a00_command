@@ -31,10 +31,11 @@ docker-compose up/start/stop etc as normal
 
 """
 
-def update_dev():
+def update():
     sudo("mkdir -p /opt/augment00/dev")
-    put("../deskcontrol", "/opt/augment00/dev", use_sudo=True)
+    sudo("mkdir -p /opt/augment00/dev/command")
+    put("../src/a00_command", "/opt/augment00/dev/command", use_sudo=True)
+    put("../main.py", "/opt/augment00/dev/command", use_sudo=True)
     put("docker-compose-dev.yml", "/opt/augment00/dev/docker-compose.yml", use_sudo=True)
     put(".env", "/opt/augment00/dev/.env", use_sudo=True)
-    put("config_local.py", "/opt/augment00/dev/deskcontrol/config_local.py", use_sudo=True)
 

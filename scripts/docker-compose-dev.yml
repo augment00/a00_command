@@ -16,6 +16,6 @@ services:
     image: "augment00/augment00-command:latest"
     volumes:
       - "/etc/opt/augment00:/etc/opt/augment00"
-      - "/opt/augment00/dev/augment00-command:/opt/augment00/dev/augment00-command"
+      - "/opt/augment00/dev/command:/opt/augment00/dev/command"
     env_file: .env
-    command: "python -u /opt/augment00/dev/deskcontrol/controller.py"
+    command: "python -u /opt/augment00/dev/command/main.py"
