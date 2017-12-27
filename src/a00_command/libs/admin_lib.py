@@ -1,5 +1,8 @@
-import subprocess
+import os
 
 def reboot():
-    cmd = "reboot"
-    subprocess.call(cmd, shell=True)
+    print "rebooting"
+    file_path = "/etc/opt/augment00/rebootme"
+    if not os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            f.write("reboot")
