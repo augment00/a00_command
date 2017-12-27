@@ -22,6 +22,7 @@ except ImportError:
 from a00_command import Commander
 from a00_command.libs.test_lib import say
 from a00_command.libs.admin_lib import reboot
+from a00_command.libs.recording_lib import start_recording, stop_recording
 
 CREDS_PATH = os.environ["CREDENTIALS_PATH"]
 GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
@@ -48,6 +49,8 @@ def main():
     # add a function to be called by the commander
     commander.add_function("say", say)
     commander.add_function("reboot", reboot)
+    commander.add_function("start_recording", start_recording)
+    commander.add_function("stop_recording", stop_recording)
 
     # start it
     commander.start()
