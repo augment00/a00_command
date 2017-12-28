@@ -13,17 +13,17 @@ def start_recording(media_type):
         os.remove(MEDIA_FILE_PATH)
 
     ## just copy file for tests
-
+    ## TODO start recording to the file MEDIA_FILE_PATH instead of this copy
     shutil.copy(TEST_MEDIA_FILE_PATH, MEDIA_FILE_PATH)
 
 
 def stop_recording(media_type, upload_url, confirm_url):
 
-    ## stop recording
+    ## TODO stop recording
 
+    ## leave this stuff - it uploading the file and sends a confirmation to the web app
     with open(MEDIA_FILE_PATH, "rb") as f:
         rsp = requests.put(upload_url, data=f)
-
 
     if rsp.status_code < 300:
         status_code = 200
