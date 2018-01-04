@@ -22,6 +22,10 @@ except ImportError:
 from a00_command import Commander
 from a00_command.libs.test_lib import say
 from a00_command.libs.admin_lib import reboot
+#from a00_command.libs.recording_lib import start_record_audio, stop_record_audio
+#from a00_command.libs.recording_lib import start_record_video, stop_record_video
+#from a00_command.libs.recording_lib import start_timelapse, stop_timelapse, take_picture
+from a00_command.libs.recording_lib import start_recording, stop_recording
 
 CREDS_PATH = os.environ["CREDENTIALS_PATH"]
 GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
@@ -48,6 +52,15 @@ def main():
     # add a function to be called by the commander
     commander.add_function("say", say)
     commander.add_function("reboot", reboot)
+    # commander.add_function("start_record_audio", start_record_audio)
+    # commander.add_function("stop_record_audio", stop_record_audio)
+    # commander.add_function("start_record_video", start_record_video)
+    # commander.add_function("stop_record_video", stop_record_video)
+    # commander.add_function("stop_record_video", start_timelapse)
+    # commander.add_function("stop_record_video", stop_timelapse)
+    # commander.add_function("stop_record_video", take_picture)
+    commander.add_function("start_recording", start_recording)
+    commander.add_function("stop_recording", stop_recording)
 
     # start it
     commander.start()

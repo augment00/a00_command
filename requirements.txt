@@ -1,3 +1,6 @@
 requests
 pyrebase
 raven
+sounddevice
+soundfile
+picamera

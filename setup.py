@@ -14,9 +14,8 @@ setup(name='a00_command',
     author='Paul Harter',
     author_email='username: paul, domain: glowinthedark.co.uk',
     license="LICENSE",
-    install_requires=['requests', 'pyrebase'],
+    install_requires=['requests', 'pyrebase', 'raven', 'sounddevice', 'soundfile', 'picamera'],
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False)
-
