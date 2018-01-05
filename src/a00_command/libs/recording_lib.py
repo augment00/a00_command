@@ -11,11 +11,13 @@ import time
 
 CHANNELS = 1
 RATE = 44100
-FLAC_OUTPUT_FILENAME_TEMPLATE = "%s.flac"
-VIDEO_OUTPUT_FILENAME_TEMPLATE = "%s.h264"
-PICTURE_OUTPUT_FILENAME_TEMPLATE = "%s.jpg"
+# FLAC_OUTPUT_FILENAME_TEMPLATE = "%s.flac"
+# VIDEO_OUTPUT_FILENAME_TEMPLATE = "%s.h264"
+# PICTURE_OUTPUT_FILENAME_TEMPLATE = "%s.jpg"
 
-MEDIA_FILE_PATH = "/var/opt/augment00/recordings/media"
+# MEDIA_FILE_PATH = "/var/opt/augment00/recordings/media"
+VIDEO_FILE_PATH = "/var/opt/augment00/recordings/video.h264"
+AUDIO_FILE_PATH = "/var/opt/augment00/recordings/audio.flac"
 # TEST_MEDIA_FILE_PATH = "/var/opt/augment00/dev/recordings/test_mov.mov"
 
 # for video, the picamera library provides a camera object
@@ -27,39 +29,39 @@ def audiorecording_callback(indata, frames, time, status):
 
 # for audio, we record the audio stream in a queue object and use threading to start and stop
 q = Queue.Queue()
+t = None
 
-def write_audiofile(q,fn):
+def write_audiofile(q):
     t = threading.currentThread()
-    with sf.SoundFile(fn, mode='x', samplerate=RATE, channels=CHANNELS) as f:
+    with sf.SoundFile(AUDIO_FILE_PATH, mode='x', samplerate=RATE, channels=CHANNELS) as f:
         with sd.InputStream(samplerate=RATE, channels=CHANNELS, callback=audiorecording_callback):
             while getattr(t, "do_run", True):
                 f.write(q.get())
             f.close()
 
-t = threading.Thread(target=write_audiofile, args = (q, filename))
+
 
 def start_recording(media_type):
     """This function is called to start recording."""
     print "starting to record %s" % media_type
-    if os.path.exists(MEDIA_FILE_PATH):
-        os.remove(os.join(MEDIA_FILE_PATH,"*"))
 
     # ## just copy file for tests
     # ## TODO start recording to the file MEDIA_FILE_PATH instead of this copy
     # shutil.copy(TEST_MEDIA_FILE_PATH, MEDIA_FILE_PATH)
 
     if media_type == "audio":
+        if os.path.exists(AUDIO_FILE_PATH):
+            os.remove(AUDIO_FILE_PATH)
         # generate audio filename from timestamp so that uploaded files are easy to identify
-        timestamp = time.strftime("audio_%Y%m%d-%H%M%S")
-        filename = os.join(MEDIA_FILE_PATH,FLAC_OUTPUT_FILENAME % timestamp)
+        global t
+        t = threading.Thread(target=write_audiofile, args=(q,))
         t.do_run = True
         t.start()
 
     if media_type == "video":
-        # generate video filename from timestamp so that uploaded files are easy to identify
-        timestamp = time.strftime("video_%Y%m%d-%H%M%S")
-        filename = os.join(MEDIA_FILE_PATH, VIDEO_OUTPUT_FILENAME_TEMPLATE % timestamp)
-        cam.start_recording(filename)
+        if os.path.exists(VIDEO_FILE_PATH):
+            os.remove(VIDEO_FILE_PATH)
+        cam.start_recording(VIDEO_FILE_PATH)
 
 def stop_recording(media_type, upload_url, confirm_url):
     """This function is called to stop recording."""
@@ -67,13 +69,15 @@ def stop_recording(media_type, upload_url, confirm_url):
     if media_type == "audio":
         t.do_run = False
         t.join()
+        with open(AUDIO_FILE_PATH, "rb") as f:
+            rsp = requests.put(upload_url, data=f)
 
     if media_type == "video":
         cam.stop_recording()
+        with open(VIDEO_FILE_PATH, "rb") as f:
+            rsp = requests.put(upload_url, data=f)
 
     ## leave this stuff - it uploading the file and sends a confirmation to the web app
-    with open(MEDIA_FILE_PATH, "rb") as f:
-        rsp = requests.put(upload_url, data=f)
 
     if rsp.status_code < 300:
         status_code = 200
