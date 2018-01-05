@@ -6,8 +6,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 from config_local import PI_PASSWORD
 
-env.hosts = ["%s:%s" % ("raspberrypi.local", 22)]
-# env.hosts = ["%s:%s" % ("169.254.162.179", 22)]
+# env.hosts = ["%s:%s" % ("raspberrypi.local", 22)]
+env.hosts = ["%s:%s" % ("10.4.66.74", 22)]
 env.user = "pi"
 env.password = PI_PASSWORD
 
