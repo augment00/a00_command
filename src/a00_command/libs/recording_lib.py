@@ -7,6 +7,7 @@ import soundfile as sf
 import Queue
 import threading
 import picamera
+import subprocess
 import time
 
 CHANNELS = 1
@@ -17,6 +18,7 @@ RATE = 44100
 
 # MEDIA_FILE_PATH = "/var/opt/augment00/recordings/media"
 VIDEO_FILE_PATH = "/var/opt/augment00/recordings/video.h264"
+MP4_FILE_PATH = "/var/opt/augment00/recordings/video.mp4"
 AUDIO_FILE_PATH = "/var/opt/augment00/recordings/audio.flac"
 # TEST_MEDIA_FILE_PATH = "/var/opt/augment00/dev/recordings/test_mov.mov"
 
@@ -74,7 +76,13 @@ def stop_recording(media_type, upload_url, confirm_url):
 
     if media_type == "video":
         cam.stop_recording()
-        with open(VIDEO_FILE_PATH, "rb") as f:
+        if os.path.exists(MP4_FILE_PATH):
+            os.remove(MP4_FILE_PATH)
+
+        cmd = "MP4Box -add %s %s" % (VIDEO_FILE_PATH, MP4_FILE_PATH)
+        subprocess.call(cmd)
+
+        with open(MP4_FILE_PATH, "rb") as f:
             rsp = requests.put(upload_url, data=f)
 
     ## leave this stuff - it uploading the file and sends a confirmation to the web app
