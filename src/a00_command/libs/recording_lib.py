@@ -80,7 +80,7 @@ def stop_recording(media_type, upload_url, confirm_url):
             os.remove(MP4_FILE_PATH)
 
         cmd = "MP4Box -add %s %s" % (VIDEO_FILE_PATH, MP4_FILE_PATH)
-        subprocess.call(cmd)
+        subprocess.call(cmd, shell=True)
 
         with open(MP4_FILE_PATH, "rb") as f:
             rsp = requests.put(upload_url, data=f)
